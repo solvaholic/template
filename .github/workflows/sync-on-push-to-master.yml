@@ -70,6 +70,9 @@ jobs:
             echo "INFO: Copy '${_src}' to '${_dst}'."
             cp "${_src}" "${_dst}"
           done
+          git -C ${{ matrix.target_repo }} config user.name "${GIT_AUTHOR_NAME}"
+          git -C ${{ matrix.target_repo }} config \
+            user.email "${GIT_AUTHOR_EMAIL}"
           git -C ${{ matrix.target_repo }} commit -a \
             -m "Sync from template@${{ github.sha }}"
 
