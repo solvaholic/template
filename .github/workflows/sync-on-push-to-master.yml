@@ -15,7 +15,6 @@ on:
   push:
     branches:
       - master
-      - try-syncing
 
 env:
   BRANCH_NAME: template/${{ github.sha }}
