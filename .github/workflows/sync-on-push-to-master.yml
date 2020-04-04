@@ -73,7 +73,8 @@ jobs:
           git -C ${{ matrix.target_repo }} config user.name "${GIT_AUTHOR_NAME}"
           git -C ${{ matrix.target_repo }} config \
             user.email "${GIT_AUTHOR_EMAIL}"
-          git -C ${{ matrix.target_repo }} commit -a \
+          git -C ${{ matrix.target_repo }} add .
+          git -C ${{ matrix.target_repo }} commit \
             -m "Sync from template@${{ github.sha }}"
 
         # Push the branch to the target repository.
