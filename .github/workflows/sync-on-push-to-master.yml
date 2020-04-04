@@ -1,0 +1,76 @@
+name: Sync created repos on every push to master
+
+#
+# - Only run on the template repository itself.
+# - For each target repository:
+#   - Clone the target repository. Check out a branch.
+#   - Copy files from the template onto the target clone.
+#   - Push the branch to the target repository.
+#   - Create a pull request in the target repository.
+#
+
+# TODO:
+# - Only run if target was created from template.
+
+on:
+  push:
+    branches:
+      - master
+      - try-syncing
+
+env:
+  _template ${{ github.repository }}
+  _branch template/${{ github.sha }}
+
+jobs:
+  sync:
+    # Only run on the template repository itself.
+    if: github.repository == 'solvaholic/template'
+    name: Run script/test
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        # List each repository you'd like to sync changes to.
+        # Note: ${{ secrets.my_token }} must have push access to each.
+
+        # TODO: solvaholic/octodns-sync,
+        target_repo: ['solvaholic/crispy-disco']
+
+    steps:
+      - name: Check out the template repository
+        uses: actions/checkout@v2
+        with:
+          path: ${{ github.repository }}
+
+      # Clone the target repository. Check out a branch.
+      - name: Check out target repository ${{ matrix.target_repo }}
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ matrix.target_repo }}
+          token: ${{ secrets.my_token }}
+          path: ${{ matrix.target_repo }}
+      - name: Create branch in target repository ${{ matrix.target_repo }}
+        run: git -C "${{ matrix.target_repo }}" checkout -b "${_branch}"
+
+      # Copy files from the template onto the target clone.
+      - name: Copy template onto ${{ matrix.target_repo }}
+        run: |
+          _files="$(find ${{ github.repository }} \
+            ! -path "*/.git/*" \
+            ! -name ".gitignore" \
+            ! -name "README.md" \
+            -type f \
+            -print)"
+          for _file in ${_files}; do
+            _src="${_file}"
+            _dst="${{ matrix.target_repo }}/${_file#${{ github.repository }}/}"
+            echo "INFO: Copy '${_src}' to '${_dst}'."
+            # TODO: Uncomment this, after the rest looks OK.
+            #       While commented, run should push no-change branch to target.
+            # cp "${_src}" "${_dst}"
+          done
+
+        # Push the branch to the target repository.
+      - name: Push topic branch to ${{ matrix.target_repo }}
+        run: git -C ${{ matrix.target_repo }} push -u origin "${_branch}"
