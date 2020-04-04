@@ -77,6 +77,17 @@ jobs:
           git -C ${{ matrix.target_repo }} commit \
             -m "Sync from template@${{ github.sha }}"
 
-        # Push the branch to the target repository.
+      # Push the branch to the target repository.
       - name: Push topic branch to ${{ matrix.target_repo }}
         run: git -C ${{ matrix.target_repo }} push -u origin "${BRANCH_NAME}"
+
+      # Create a pull request in the target repository.
+      - name: Create pull request in ${{ matrix.target_repo }}
+        run: |
+          pushd ${{ matrix.target_repo }}
+          gh pr create \
+            -B master \
+            -b "Sync updates from ${{ github.repository }}" \
+            -f \
+            -t "Sync updates from ${{ github.repository }}"
+          popd
