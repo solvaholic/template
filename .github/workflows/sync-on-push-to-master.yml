@@ -28,7 +28,7 @@ jobs:
   sync:
     # Only run on the template repository itself.
     if: github.repository == 'solvaholic/template'
-    name: Run script/test
+    name: Push template changes out to created repos
     runs-on: ubuntu-latest
 
     strategy:
@@ -85,9 +85,11 @@ jobs:
       - name: Create pull request in ${{ matrix.target_repo }}
         run: |
           pushd ${{ matrix.target_repo }}
-          gh pr create \
-            -B master \
-            -b "Sync updates from ${{ github.repository }}" \
-            -f \
-            -t "Sync updates from ${{ github.repository }}"
+          export GITHUB_USER="$GITHUB_ACTOR"
+          hub pull-request \
+            -b master \
+            -h "${BRANCH_NAME}" \
+            --no-edit \
+            -m "(title) Sync updates from ${{ github.repository }}" \
+            -m "(body) Sync updates from ${{ github.repository }}"
           popd
