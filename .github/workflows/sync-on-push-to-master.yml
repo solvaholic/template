@@ -69,6 +69,7 @@ jobs:
             _dst="${{ matrix.target_repo }}/${_file#${{ github.repository }}/}"
             # TODO: Find a more robust / elegant way to get this :point_down:.
             _dst="${_dst%/*}/"
+            mkdir -p "${_dst}"
             echo "INFO: Copy '${_src}' to '${_dst}'."
             cp "${_src}" "${_dst}"
           done
