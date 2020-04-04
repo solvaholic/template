@@ -83,9 +83,11 @@ jobs:
 
       # Create a pull request in the target repository.
       - name: Create pull request in ${{ matrix.target_repo }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.my_token }}
+          GITHUB_USER: ${{ github.actor }}
         run: |
           pushd ${{ matrix.target_repo }}
-          export GITHUB_USER="$GITHUB_ACTOR"
           hub pull-request \
             -b master \
             -h "${BRANCH_NAME}" \
