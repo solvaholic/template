@@ -19,8 +19,8 @@ on:
       - try-syncing
 
 env:
-  SYNC_SRC ${{ github.repository }}
-  BRANCH_NAME template/${{ github.sha }}
+  SYNC_SRC: ${{ github.repository }}
+  BRANCH_NAME: template/${{ github.sha }}
 
 jobs:
   sync:
