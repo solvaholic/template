@@ -66,10 +66,10 @@ jobs:
             _src="${_file}"
             _dst="${{ matrix.target_repo }}/${_file#${{ github.repository }}/}"
             echo "INFO: Copy '${_src}' to '${_dst}'."
-            # TODO: Uncomment this, after the rest looks OK.
-            #       While commented, run should push no-change branch to target.
-            # cp "${_src}" "${_dst}"
+            cp "${_src}" "${_dst}"
           done
+          git -C ${{ matrix.target_repo }} commit -a \
+            -m "Sync from template@${{ github.sha }}"
 
         # Push the branch to the target repository.
       - name: Push topic branch to ${{ matrix.target_repo }}
