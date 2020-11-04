@@ -14,7 +14,7 @@ name: Sync changes from template
 
 on:
   schedule:
-    # Run on the 30th minute of each hour
+    # Run at 0517 UTC each Friday.
     - cron: "17 5 * * 5"
   push:
     # Also run when this file changes.
