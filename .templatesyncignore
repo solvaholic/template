@@ -1,0 +1,14 @@
+# Files and directories to exclude when syncing from template repository
+# Follows .gitignore syntax
+
+# Preserve target repository's workflows
+.github/workflows/
+
+# Preserve target repository's ignore rules
+.gitignore
+
+# Preserve target repository's readme
+README.md
+
+# Preserve target repository's Copilot instructions
+.github/copilot-instructions.md
