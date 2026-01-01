@@ -1,0 +1,9 @@
+{
+  "files.associations": {
+    "*.agent.md": "markdown",
+    "*.instructions.md": "markdown",
+    "SKILL.md": "markdown",
+  },
+  "chat.useAgentSkills": true,
+  "chat.customAgentInSubagent.enabled": true,
+}
