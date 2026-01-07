@@ -1,5 +1,5 @@
 ---
-applyTo: "**/*.instructions.md"
+applyTo: ".github/instructions/*.instructions.md"
 ---
 
 # Path-Specific Instructions
