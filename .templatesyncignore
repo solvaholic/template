@@ -1,14 +1,18 @@
 # Files and directories to exclude when syncing from template repository
 # Follows .gitignore syntax
 
-# Preserve target repository's workflows
-.github/workflows/
+# Preserve workflows
+.github/workflows/*
+!.github/workflows/sync-from-template.yml
 
-# Preserve target repository's ignore rules
+# Preserve ignore rules
 .gitignore
 
-# Preserve target repository's readme
+# Preserve readme
 README.md
 
-# Preserve target repository's Copilot instructions
+# Preserve Copilot instructions
 .github/copilot-instructions.md
+
+# Preserve VS Code settings
+.vscode
