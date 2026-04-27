@@ -67,16 +67,28 @@ changes (deleting files, rewriting `AGENTS.md` from scratch).
   what it is, how to use it, how to contribute. Remove template-meta
   sections (template sync, "what's included") unless the user wants
   to keep them.
-- **`.templatesyncignore`** - Add any files the user plans to customize
-  heavily so future template syncs don't clobber them. Uses `.gitignore`
-  syntax.
-- **`.gitignore`** - Add language/tool-specific ignores based on the
-  stack (e.g., `node_modules/`, `__pycache__/`, `.venv/`, `dist/`).
+- **`.templatesyncignore`** - Don't try to predict what the user will
+  want to exclude from future template syncs; the right time to decide
+  is when a sync PR actually shows up. Instead, **remind the user** that
+  this file exists, what it does (preserves listed files from being
+  overwritten by template sync PRs), and that they can edit it later
+  when reviewing a sync PR. Common preservation rules are already in
+  place; show the file so the user sees what's preserved by default.
+- **`.gitignore`** - Read the existing file first. Append ecosystem-
+  specific entries based on the stack (e.g., `node_modules/`,
+  `__pycache__/`, `.venv/`, `dist/`). Don't duplicate entries already
+  present.
 - **`.vscode/extensions.json`** - Recommend extensions matching the
   stack (e.g., `ms-python.python` for Python, `dbaeumer.vscode-eslint`
   for JS/TS). Keep the list short.
 
-### 3. Recommend repository settings
+### 3. Commit the changes
+
+Show the user a summary of what changed and let them decide how to
+commit: a single commit on the current branch, a feature branch + PR,
+or staged for them to review. Don't push without their say-so.
+
+### 4. Recommend repository settings
 
 These can't be set from inside the repo. List them so the user can apply
 them in GitHub:
@@ -89,7 +101,7 @@ them in GitHub:
   project's needs.
 - Secret scanning and Dependabot if the repo will hold code.
 
-### 4. Decide what to do with the example skill
+### 5. Decide what to do with the example skill
 
 The `.agents/skills/template-example/` skill is a layout demo, not
 useful in production. Offer to:
@@ -97,9 +109,10 @@ useful in production. Offer to:
 - Delete it now that the user has seen the pattern, or
 - Keep it as a reference until they've authored their first real skill.
 
-### 5. Decide what to do with this skill
+### 6. Decide what to do with this skill
 
-Once the repo is customized, this skill has served its purpose. Offer to:
+Do this **last**, after all other steps are committed. Once the repo is
+customized, this skill has served its purpose. Offer to:
 
 - Delete `.agents/skills/set-up-this-repo/` (recommended for most
   projects), or
