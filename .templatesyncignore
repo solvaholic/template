@@ -11,8 +11,9 @@
 # Preserve readme
 README.md
 
-# Preserve Copilot instructions
+# Preserve agent instructions
 .github/copilot-instructions.md
+AGENTS.md
 
 # Preserve VS Code settings
 .vscode
