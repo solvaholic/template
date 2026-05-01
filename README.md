@@ -49,6 +49,24 @@ Automatically checks for updates from **[solvaholic/template](https://github.com
 
 **Configuration:** `.github/workflows/sync-from-template.yml`
 
+**Prerequisite:** GitHub Actions must be allowed to create pull
+requests in your repository. Without this, the workflow will push a
+branch but fail to open the PR (with a `GitHub Actions is not
+permitted to create or approve pull requests` error in the log).
+
+To enable it, go to **Settings → Actions → General → Workflow
+permissions** and check **"Allow GitHub Actions to create and approve
+pull requests"**, or run:
+
+```sh
+gh api -X PUT /repos/OWNER/REPO/actions/permissions/workflow \
+  -f default_workflow_permissions=read \
+  -F can_approve_pull_request_reviews=true
+```
+
+The `set-up-this-repo` skill handles this during onboarding, and the
+workflow surfaces a remediation hint in the job log if a sync fails.
+
 ## Customization
 
 ### Exclude files from sync

@@ -45,6 +45,28 @@ Before any edits, run these quick checks and surface anything unusual.
   branch already, ask whether to keep edits there.
 - **Confirm the symlink.** `readlink .github/copilot-instructions.md`
   should print `../AGENTS.md`. If it doesn't, flag it before editing.
+- **Check the Actions PR-creation toggle.** The template's
+  `sync-from-template.yml` workflow opens PRs each week, which
+  requires *Settings → Actions → General → Workflow permissions →
+  Allow GitHub Actions to create and approve pull requests*. Run:
+
+  ```sh
+  gh api "/repos/$(gh repo view --json nameWithOwner -q .nameWithOwner)/actions/permissions/workflow"
+  ```
+
+  If `can_approve_pull_request_reviews` is `false`, the workflow will
+  push the sync branch but fail to open the PR. Offer to enable it:
+
+  ```sh
+  gh api -X PUT \
+    "/repos/$(gh repo view --json nameWithOwner -q .nameWithOwner)/actions/permissions/workflow" \
+    -f default_workflow_permissions=read \
+    -F can_approve_pull_request_reviews=true
+  ```
+
+  If the user lacks admin perms or prefers the UI, walk them through
+  the Settings path instead. Don't skip this step - it's the single
+  most common cause of "the sync workflow seems broken" reports.
 
 ### 1. Interview the user
 
@@ -186,10 +208,11 @@ customized, this skill has served its purpose. Offer to:
 ## Boundaries
 
 - Will: edit files in this repository, suggest GitHub settings, interview
-  the user to gather requirements.
-- Will NOT: change GitHub repo settings directly, push commits without
-  the user's confirmation, or invent project facts the user didn't
-  provide. Mark assumptions as TODOs instead.
+  the user to gather requirements, and toggle the Actions
+  PR-creation setting via `gh api` when the user authorizes it.
+- Will NOT: change other GitHub repo settings directly, push commits
+  without the user's confirmation, or invent project facts the user
+  didn't provide. Mark assumptions as TODOs instead.
 
 ## Gotchas
 

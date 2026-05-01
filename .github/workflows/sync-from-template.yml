@@ -34,6 +34,7 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Sync from template
+        id: sync
         uses: AndreasAugustin/actions-template-sync@v2
         with:
           source_repo_path: solvaholic/template
@@ -45,3 +46,10 @@ jobs:
             
             Please review changes carefully before merging.
           pr_labels: template-sync,automated
+
+      - name: Surface common failure causes
+        if: failure() && steps.sync.conclusion == 'failure'
+        run: |
+          cat <<'EOF'
+          ::error title=Template sync failed::If the log above contains "GitHub Actions is not permitted to create or approve pull requests", enable it at Settings -> Actions -> General -> Workflow permissions -> "Allow GitHub Actions to create and approve pull requests". You can also run: gh api -X PUT /repos/${GITHUB_REPOSITORY}/actions/permissions/workflow -f default_workflow_permissions=read -F can_approve_pull_request_reviews=true. This setting requires repo admin and cannot be toggled by the workflow itself.
+          EOF
