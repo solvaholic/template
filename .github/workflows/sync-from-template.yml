@@ -46,6 +46,8 @@ jobs:
             
             Please review changes carefully before merging.
           pr_labels: template-sync,automated
+          is_pr_cleanup: "true"
+          is_force_push_pr: "true"
 
       - name: Surface common failure causes
         if: failure() && steps.sync.conclusion == 'failure'
